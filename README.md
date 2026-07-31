@@ -10,30 +10,28 @@ Investigar, com base em dados públicos da ANEEL, quais estados brasileiros apre
 piores indicadores de continuidade de energia elétrica — tanto em **frequência** de
 interrupções (FEC) quanto em **duração** (DEC) — e testar duas hipóteses explicativas:
 
-1. **Hipótese climática**: meses/estados com mais chuva e vento forte concentram mais
-   interrupções de origem externa e não programada (FECXN/DECXN).
+1. **Hipótese climática**: estados com mais chuva concentram mais interrupções (FEC).
 2. **Hipótese populacional/geográfica**: municípios menores/menos populosos levam mais
    tempo para ter a energia restabelecida (DEC mais alto).
 
 ## Integrantes do grupo
 
-- Luiz Ricardo Vigilato
-- 
-- 
+- Luiz Ricardo
+- Vicenzo C. de Castro
+- João Antônio
 
 ## Perguntas de análise (guiam o dashboard)
 
 | # | Pergunta | Indicador(es) usado(s) |
 |---|---|---|
-| 1 | Quais estados apresentam os maiores valores de DEC e FEC? | `DEC`, `FEC` |
-| 2 | As interrupções são mais frequentes ou mais demoradas? | `FEC` vs `DEC` |
-| 3 | Grande parte das interrupções é de origem externa (FECXN/DECXN)? | `FECXN`, `DECXN` vs `FEC`, `DEC` |
-| 4 | Estados com maior índice de chuva apresentam maiores valores de DECXN/FECXN? | `DECXN`/`FECXN` x precipitação (INMET) |
-| 5 | Municípios com menor população têm DEC (duração) maior? | `DEC` x população (IBGE) |
+| 1 | Quais estados apresentam as interrupções de energia mais demoradas? | `DEC` |
+| 2 | Quais estados registram o maior número de interrupções de energia? | `FEC` |
+| 3 | Estados com maior precipitação tendem a apresentar maior frequência de interrupções? | `FEC` x precipitação (INMET) |
+| 4 | Municípios com menor população tendem a apresentar interrupções mais longas? | `DEC` x população (IBGE) |
 
-A conclusão do grupo (o que melhor explica as diferenças observadas) é apresentada na
-etapa de apresentação, cruzando as respostas das 5 perguntas acima — não é um gráfico
-isolado do dashboard.
+Os indicadores `DEC` e `FEC` foram escolhidos por serem os indicados diretamente pelo
+material do professor. A conclusão do grupo é apresentada cruzando as respostas das 4
+perguntas acima com o contexto de cada base.
 
 ## Fontes de dados
 
@@ -50,8 +48,8 @@ Detalhes de colunas, período coberto e limitações de cada base: ver
 ## Ferramentas usadas
 
 - **Python (pandas)** — ETL e tratamento dos dados
-- **Looker Studio** — dashboard final
-- **Bibliotecas Python**: pandas, openpyxl (leitura do .xls/.xlsx do IBGE)
+- **Power BI** — dashboard final
+- **Bibliotecas Python**: pandas, openpyxl, xlrd (leitura do .xls/.xlsx do IBGE)
 
 ## Como executar o projeto
 
@@ -68,7 +66,7 @@ Detalhes de colunas, período coberto e limitações de cada base: ver
    python etl_quedas_energia.py
    ```
 5. O resultado é gerado em `bases_tratadas/base_final_tratada.csv` — esse é o arquivo
-   usado como fonte de dados no Looker Studio.
+   usado como fonte de dados no Power BI.
 
 ## Estrutura de pastas
 
@@ -84,7 +82,7 @@ projeto_final_grupo/
 ├── etl/
 │   └── etl_quedas_energia.py
 ├── dashboard/
-│   └── (link/instruções de acesso ao Looker Studio)
+│   └── (arquivo/link de acesso ao Power BI)
 └── documentacao/
     ├── dicionario_de_dados.md
     └── indqual-municipio.csv              <- crosswalk oficial da ANEEL

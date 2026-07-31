@@ -22,21 +22,22 @@
 | `NumPeriodoIndice` | inteiro (1–12) | Mês de competência do índice |
 | `VlrIndiceEnviado` | decimal | Valor apurado do indicador |
 
-### Indicadores usados (`SigIndicador`)
+### Indicadores da base tratada (`SigIndicador`)
 
 Fonte: dicionário oficial `dominio-indicadores.csv` da ANEEL.
 
-| Sigla | Significado |
-|---|---|
-| `FEC` | Frequência Equivalente de Interrupção por unidade consumidora — geral |
-| `DEC` | Duração Equivalente de Interrupção por unidade consumidora — geral |
-| `FECXN` | Frequência de interrupções de origem **externa**, **não programada** (a mais associada a causas climáticas: vento, raio, árvore na rede) |
-| `DECXN` | Duração de interrupções de origem **externa**, **não programada** |
-| `NumCon` | Número de consumidores do conjunto (usado como peso ao calcular médias por estado, para conjuntos grandes não terem o mesmo peso que conjuntos pequenos) |
+| Sigla | Significado | Usado no dashboard final? |
+|---|---|---|
+| `FEC` | Frequência Equivalente de Interrupção por unidade consumidora — geral | **Sim** — perguntas 2 e 3 |
+| `DEC` | Duração Equivalente de Interrupção por unidade consumidora — geral | **Sim** — perguntas 1 e 4 |
+| `FECXN` | Frequência de interrupções de origem externa, não programada | Fica disponível na base tratada, mas não é o foco dos gráficos finais |
+| `DECXN` | Duração de interrupções de origem externa, não programada | Idem |
+| `NumCon` | Número de consumidores do conjunto | Idem — disponível para eventuais médias ponderadas |
 
-Existem outras siglas na base (`FECIP`, `DECIND`, `FECXP` etc., ligadas a causas internas
-e a interrupções programadas) que não usamos porque não são o foco da hipótese climática
-nem da pergunta principal do projeto.
+`DEC` e `FEC` foram os indicadores priorizados porque são os indicados diretamente pelo
+material de orientação do professor. Outras siglas presentes na base (`FECIP`, `DECIND`,
+`FECXP` etc., ligadas a causas internas e a interrupções programadas) não fazem parte do
+escopo do projeto.
 
 ---
 
@@ -64,7 +65,7 @@ nem da pergunta principal do projeto.
 - **Arquivo**: `POP2025_20260113.xls`
 - **Referência**: 1º de julho de 2025
 - **Papel**: testar a hipótese de que municípios menores/menos populosos demoram mais
-  para ter a energia restabelecida (proxy de "cidade pequena/rural")
+  para ter a energia restabelecida (proxy de "cidade pequena/rural") — pergunta 4
 
 | Coluna (original) | Coluna tratada | Descrição |
 |---|---|---|
@@ -80,8 +81,8 @@ nem da pergunta principal do projeto.
 - **Fonte**: INMET — Dados Históricos, Estações Automáticas
   https://bdmep.inmet.gov.br
 - **Arquivos**: 1 CSV por estação/polo meteorológico, ano de 2025
-- **Papel**: testar a hipótese de que meses/estados com mais chuva e vento forte têm
-  mais interrupções externas não programadas (FECXN/DECXN)
+- **Papel**: testar a hipótese de que estados com mais chuva têm mais interrupções
+  (pergunta 3)
 - **Formato**: CSV, separador `;`, decimal `,`, encoding Latin-1 (ISO-8859-1). Cada
   arquivo tem 8 linhas de metadado antes do cabeçalho das colunas de dados.
 
@@ -97,14 +98,14 @@ nem da pergunta principal do projeto.
 | `Data` | Sim | Combinada com `Hora UTC` |
 | `Hora UTC` | Indiretamente | Usada para saber que a granularidade é horária, antes de agregar por mês |
 | `PRECIPITAÇÃO TOTAL, HORÁRIO (mm)` | **Sim** | Agregada por soma mensal → `PrecipitacaoTotalMM`; também usada para contar horas com chuva forte (≥ 10 mm/h) |
-| `PRESSAO ATMOSFERICA AO NIVEL DA ESTACAO, HORARIA (mB)` | Não | Fora do escopo da hipótese climática |
+| `PRESSAO ATMOSFERICA AO NIVEL DA ESTACAO, HORARIA (mB)` | Não | Fora do escopo da análise |
 | `PRESSÃO ATMOSFERICA MAX./MIN. NA HORA ANT. (mB)` | Não | Idem |
 | `RADIACAO GLOBAL (Kj/m²)` | Não | Idem |
 | `TEMPERATURA ...` (7 colunas) | Não | Idem |
 | `UMIDADE ...` (3 colunas) | Não | Idem |
 | `VENTO, DIREÇÃO HORARIA (gr)` | Não | Idem |
-| `VENTO, RAJADA MAXIMA (m/s)` | **Sim** | Agregada por máximo mensal → `RajadaMaximaMS` |
-| `VENTO, VELOCIDADE HORARIA (m/s)` | Não | A rajada máxima já representa melhor os eventos de vento forte que a média |
+| `VENTO, RAJADA MAXIMA (m/s)` | Disponível na base tratada | Não usada nos gráficos finais |
+| `VENTO, VELOCIDADE HORARIA (m/s)` | Não | Idem |
 
 ### Agregação aplicada
 
@@ -113,6 +114,10 @@ nem da pergunta principal do projeto.
 2. Mensal por estação → mensal por estado (UF): média entre as estações do estado.
    (Justificativa: a malha do INMET não tem uma estação por município, então o nível de
    estado é o que garante cobertura suficiente para comparar com a base principal.)
+
+**Importante**: por essa agregação, a variável de precipitação é a mesma para todos os
+municípios de um mesmo estado no mesmo mês. Isso é levado em conta na pergunta 3, que
+compara precipitação **por estado**, não por município individual.
 
 ---
 
@@ -135,9 +140,8 @@ nem da pergunta principal do projeto.
    revelam diferença real — a comparação é mais confiável no nível de conjunto/estado.
 
 2. **Clima agregado por estado, não por município**: como as estações do INMET não
-   cobrem todos os municípios, a variável climática foi trazida para o nível de UF. Isso
-   é adequado para a pergunta 4 (que já é sobre estados), mas significa que não dá para
-   testar a hipótese climática no nível de município individual com esses dados.
+   cobrem todos os municípios, a variável climática foi trazida para o nível de UF. Por
+   isso, a pergunta 3 compara precipitação por **estado**, e não por município.
 
 3. **Período de referência da população**: a estimativa do IBGE é de 1º/jul/2025; os
    indicadores de continuidade cobrem o ano inteiro de 2025. Não há defasagem
@@ -148,6 +152,6 @@ nem da pergunta principal do projeto.
    todos os meses. O script de ETL imprime a contagem de linhas afetadas em cada junção
    para que isso seja monitorado.
 
-5. **Indicadores desconsiderados**: a base principal tem outros indicadores além dos 5
-   usados (causas internas, programadas, etc.). Eles não foram descartados por erro —
-   foram deliberadamente deixados de fora por não serem centrais às perguntas do projeto.
+5. **Indicadores disponíveis mas não usados nos gráficos finais**: a base tratada mantém
+   `FECXN`, `DECXN` e `NumCon` (útil para eventuais médias ponderadas), mas o dashboard
+   final se concentra em `DEC` e `FEC`, conforme indicado pelo material do professor.
