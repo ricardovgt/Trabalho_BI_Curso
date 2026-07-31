@@ -9,7 +9,7 @@ Este script:
   2) Lê e trata a tabela oficial de ligação "conjunto elétrico -> município" da ANEEL.
   3) Lê e trata a base de população do IBGE.
   4) Lê, concatena e agrega (mensalmente, por estação) os arquivos do INMET.
-  5) Junta tudo em uma única base final, pronta para o Looker Studio.
+  5) Junta tudo em uma única base final, pronta para o Power BI.
 
 Saída: bases_tratadas/base_final_tratada.csv
 
